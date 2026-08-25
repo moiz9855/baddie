@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Lil Game 4 U 💗</title>
+<style>
+  :root{
+    --pink:#ff2d75;
+    --black:#0a0a0a;
+    --red:#e6193c;
+    --blue:#2b6cff;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html, body{
+    height:100%;
+  }
+
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,45,117,0.25), transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(43,108,255,0.2), transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(230,25,60,0.25), transparent 45%),
+      var(--black);
+    color:#fff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px 16px;
+    overflow-x:hidden;
+    position:relative;
+  }
+
+  .card-outer{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .card{
+    max-width:520px;
+    width:100%;
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,45,117,0.4);
+    border-radius:22px;
+    padding:36px 28px;
+    backdrop-filter:blur(6px);
+    box-shadow:0 0 40px rgba(255,45,117,0.25), 0 0 80px rgba(43,108,255,0.1);
+    text-align:center;
+    z-index:2;
+    position:relative;
+  }
+
+  h1{
+    font-size:1.7rem;
+    margin-bottom:6px;
+    background:linear-gradient(90deg,var(--pink),var(--red),var(--blue));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    letter-spacing:0.5px;
+  }
+
+  .subtitle{
+    font-size:0.9rem;
+    color:rgba(255,255,255,0.6);
+    margin-bottom:26px;
+  }
+
+  .progress-wrap{
+    width:100%;
+    height:8px;
+    background:rgba(255,255,255,0.08);
+    border-radius:20px;
+    overflow:hidden;
+    margin-bottom:30px;
+  }
+
+  .progress-bar{
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg,var(--pink),var(--blue));
+    transition:width 0.4s ease;
+  }
+
+  .question{
+    font-size:1.15rem;
+    font-weight:600;
+    margin-bottom:22px;
+    line-height:1.5;
+    min-height:60px;
+  }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+
+  .option-btn{
+    padding:14px 18px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.15);
+    background:rgba(255,255,255,0.03);
+    color:#fff;
+    font-size:0.98rem;
+    text-align:left;
+    cursor:pointer;
+    transition:all 0.2s ease;
+  }
+
+  .option-btn:hover{
+    border-color:var(--pink);
+    background:rgba(255,45,117,0.12);
+    transform:translateX(4px);
+  }
+
+  .reaction{
+    margin-top:18px;
+    font-size:0.9rem;
+    color:var(--pink);
+    min-height:20px;
+    font-style:italic;
+  }
+
+  .result{
+    display:none;
+    position:relative;
+  }
+
+  .sparkle{
+    position:absolute;
+    font-size:1.1rem;
+    opacity:0.8;
+    animation:sparkle-float 3s ease-in-out infinite;
+  }
+  .sparkle:nth-child(1){ top:-6px; left:6%; animation-delay:0s; }
+  .sparkle:nth-child(2){ top:10px; right:8%; animation-delay:0.6s; }
+  .sparkle:nth-child(3){ top:60px; left:-2%; animation-delay:1.2s; }
+  .sparkle:nth-child(4){ top:70px; right:0%; animation-delay:1.8s; }
+
+  @keyframes sparkle-float{
+    0%,100%{ transform:translateY(0) scale(1); opacity:0.6; }
+    50%{ transform:translateY(-8px) scale(1.25); opacity:1; }
+  }
+
+  .score-ring{
+    width:140px;
+    height:140px;
+    margin:0 auto 22px;
+    border-radius:50%;
+    padding:6px;
+    background:conic-gradient(var(--pink), var(--blue), var(--red), var(--pink));
+    animation:spin-slow 6s linear infinite;
+    box-shadow:0 0 45px rgba(255,45,117,0.5);
+  }
+
+  @keyframes spin-slow{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
+
+  .result .score-circle{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:var(--black);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:1.9rem;
+    font-weight:800;
+    color:#fff;
+  }
+
+  .result h2{
+    font-size:1.6rem;
+    margin-bottom:14px;
+    background:linear-gradient(90deg,var(--pink),var(--red),var(--blue));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+
+  .result p{
+    font-size:1rem;
+    line-height:1.75;
+    color:#f2f2f2;
+    margin-bottom:30px;
+  }
+
+  .btn{
+    position:relative;
+    border:none;
+    outline:none;
+    cursor:pointer;
+    padding:16px 36px;
+    font-size:1.1rem;
+    font-weight:700;
+    letter-spacing:0.5px;
+    color:#fff;
+    border-radius:50px;
+    background:linear-gradient(90deg,var(--pink),var(--red),var(--blue),var(--pink));
+    background-size:300% 100%;
+    animation:gradient-shift 4s ease infinite, glow-pulse 2s ease-in-out infinite;
+    transition:transform 0.2s ease;
+  }
+
+  @keyframes gradient-shift{
+    0%{ background-position:0% 50%; }
+    50%{ background-position:100% 50%; }
+    100%{ background-position:0% 50%; }
+  }
+
+  @keyframes glow-pulse{
+    0%,100%{ box-shadow:0 0 20px rgba(255,45,117,0.6); }
+    50%{ box-shadow:0 0 40px rgba(255,45,117,0.95), 0 0 60px rgba(43,108,255,0.4); }
+  }
+
+  .btn:hover{
+    transform:scale(1.07);
+  }
+
+  .btn:active{
+    transform:scale(0.96);
+  }
+
+  .btn-heart{
+    display:inline-block;
+    animation:pulse 1.1s infinite ease-in-out;
+  }
+
+  @keyframes pulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.3); }
+  }
+
+  .heart-fall{
+    position:fixed;
+    top:-10%;
+    font-size:1.5rem;
+    pointer-events:none;
+    user-select:none;
+    animation-name:fall;
+    animation-timing-function:linear;
+    animation-fill-mode:forwards;
+    z-index:1;
+  }
+
+  @keyframes fall{
+    0%{transform:translateY(0) rotate(0deg); opacity:1;}
+    100%{transform:translateY(110vh) rotate(360deg); opacity:0.2;}
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="card-outer">
+  <div class="card">
+    <div id="quizScreen">
+      <h1>How Iconic Are You? 💗</h1>
+      <p class="subtitle">a very scientific quiz made just for you</p>
+      <div class="progress-wrap">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+      <div class="question" id="questionText"></div>
+      <div class="options" id="optionsWrap"></div>
+      <div class="reaction" id="reactionText"></div>
+    </div>
+
+    <div class="result" id="resultScreen">
+      <span class="sparkle">✨</span>
+      <span class="sparkle">💫</span>
+      <span class="sparkle">✨</span>
+      <span class="sparkle">💫</span>
+      <div class="score-ring">
+        <div class="score-circle">10/10</div>
+      </div>
+      <h2>Confirmed: Cert. Baddie 💗</h2>
+      <p id="resultText"></p>
+      <button class="btn" id="specialBtn">Special 4 U <span class="btn-heart">💗</span></button>
+    </div>
+  </div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        q: "Rate your own aura today, be honest:",
+        options: ["Immaculate, obviously", "Pretty solid ngl", "Chill vibes only", "It's giving unmatched"],
+        reactions: ["as expected 💗", "modest much? cute.", "immaculate vibes confirmed", "no lies detected"]
+      },
+      {
+        q: "When someone compliments you, you:",
+        options: ["Already knew that", "Smile and say thanks", "Act shy but secretly agree", "Compliment them back"],
+        reactions: ["the confidence >>>", "humble AND iconic", "we see through that 👀", "the sweetest baddie fr"]
+      },
+      {
+        q: "Pick your energy this week:",
+        options: ["Main character", "Soft & mysterious", "Chaotic but loveable", "Calm and collected"],
+        reactions: ["main character confirmed 🎬", "mysterious baddie unlocked", "chaotic baddie energy 💗", "the classiest option ngl"]
+      },
+      {
+        q: "How do people usually describe you?",
+        options: ["Stunning", "Funny AF", "Effortlessly cool", "All of the above, obviously"],
+        reactions: ["accurate.", "the humor is unmatched fr", "cool without even trying, wow", "correct answer, full marks"]
+      },
+      {
+        q: "Last question — do you know how special you are?",
+        options: ["Kinda yeah", "Not really tbh", "Getting there", "I'm about to find out"],
+        reactions: ["good, keep knowing it 💗", "well, you're about to find out", "you're already there trust", "loading result... 💗"]
+      }
+    ];
+
+    let current = 0;
+    const questionText = document.getElementById('questionText');
+    const optionsWrap = document.getElementById('optionsWrap');
+    const reactionText = document.getElementById('reactionText');
+    const progressBar = document.getElementById('progressBar');
+    const quizScreen = document.getElementById('quizScreen');
+    const resultScreen = document.getElementById('resultScreen');
+    const resultText = document.getElementById('resultText');
+
+    function loadQuestion(){
+      reactionText.textContent = '';
+      const item = questions[current];
+      questionText.textContent = item.q;
+      optionsWrap.innerHTML = '';
+      progressBar.style.width = (current / questions.length) * 100 + '%';
+
+      item.options.forEach((opt, i) => {
+        const btn = document.createElement('button');
+        btn.classList.add('option-btn');
+        btn.textContent = opt;
+        btn.addEventListener('click', () => {
+          reactionText.textContent = item.reactions[i];
+          Array.from(optionsWrap.children).forEach(b => b.disabled = true);
+          setTimeout(() => {
+            current++;
+            if(current < questions.length){
+              loadQuestion();
+            } else {
+              showResult();
+            }
+          }, 900);
+        });
+        optionsWrap.appendChild(btn);
+      });
+    }
+
+    function showResult(){
+      progressBar.style.width = '100%';
+      quizScreen.style.display = 'none';
+      resultScreen.style.display = 'block';
+      resultText.textContent = "Turns out the results were rigged from the start, because there was never any version of this quiz where you didn't come out a 10/10. You're that girl, and honestly it's not even close.";
+    }
+
+    loadQuestion();
+
+    // heart rain
+    const btn = document.getElementById('specialBtn');
+    const hearts = ['💗','💖','❤️','💙'];
+    let rainInterval = null;
+
+    function createHeart(){
+      const heart = document.createElement('div');
+      heart.classList.add('heart-fall');
+      heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+      heart.style.left = Math.random() * 100 + 'vw';
+      const duration = 3 + Math.random() * 3;
+      heart.style.animationDuration = duration + 's';
+      heart.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), duration * 1000);
+    }
+
+    function startRain(){
+      if(rainInterval) return;
+      rainInterval = setInterval(createHeart, 150);
+      for(let i = 0; i < 20; i++){
+        setTimeout(createHeart, i * 40);
+      }
+      setTimeout(() => {
+        clearInterval(rainInterval);
+        rainInterval = null;
+      }, 6000);
+    }
+
+    btn.addEventListener('click', startRain);
+  </script>
+
+</body>
+</html>
